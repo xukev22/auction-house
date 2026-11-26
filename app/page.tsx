@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { signOut } from '@/utils/supabase/signout';
 import { GoogleButton } from '@/app/auth/login/GoogleButton';
@@ -38,6 +39,9 @@ export default async function Home() {
           {user ? (
             <>
               <p>You&rsquo;re signed in{firstName ? ` as ${firstName}` : ''}. See you there.</p>
+              <Link href="/paddle" className="underline underline-offset-4">
+                See your paddle
+              </Link>
               <form action={signOut}>
                 <button
                   type="submit"
