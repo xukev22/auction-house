@@ -37,7 +37,7 @@ export function Countdown({ target }: { target: Date }) {
           <span className="text-5xl font-extralight tabular-nums md:text-7xl lg:text-6xl xl:text-7xl">
             {value === null ? '––' : pad(value)}
           </span>
-          <span className="mt-1 text-sm text-bone/70">{label}</span>
+          <span className="mt-1 text-sm text-cream/70">{label}</span>
         </div>
       ))}
     </div>

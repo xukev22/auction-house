@@ -2,10 +2,12 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 // Used by the generated link-preview image (app/opengraph-image.tsx, via next/og).
+// Same concert-night palette as app/globals.css.
 export const BRAND = {
-  claret: '#5e1224',
-  claretLight: '#7a1c33',
-  bone: '#f3e9dc',
+  night: '#160a22',
+  violetGlow: '#3a1566',
+  teal: '#3cc6c4',
+  cream: '#fbf1e3',
 };
 
 // next/og can't read the woff2 files next/font uses, so load the .woff files from @fontsource.

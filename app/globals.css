@@ -1,23 +1,37 @@
 @import 'tailwindcss';
 
+/* Concert night: taken from Sonu's portrait (stage screen teal, violet tie, black stage). */
 @theme inline {
-  --color-claret: #5e1224;
-  --color-claret-deep: #3d0a16;
-  --color-bone: #f3e9dc;
-  --color-brass: #d4a64a;
+  --color-night: #160a22;
+  --color-cream: #fbf1e3;
+  --color-violet: #9d4edd;
+  --color-teal: #3cc6c4;
   --font-display: var(--font-rozha);
   --font-sans: var(--font-hanken);
 }
 
 body {
-  background-color: var(--color-claret);
-  color: var(--color-bone);
+  background-color: #160a22;
+  color: #fbf1e3;
   font-family: var(--font-hanken), system-ui, sans-serif;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-brass);
+  outline: 2px solid #3cc6c4;
   outline-offset: 3px;
+}
+
+/* Photo backdrop: a soft spotlight that fades the photos into the dark stage.
+   Phones: in the gap between the name and the date. Wide screens: the right side. */
+.stage-spotlight {
+  mask-image: radial-gradient(ellipse 75% 55% at 50% 48%, #000 25%, transparent 100%);
+}
+
+@media (min-width: 1024px) {
+  .stage-spotlight {
+    /* Centered high so the photo fades out before the date and countdown (bottom-right). */
+    mask-image: radial-gradient(ellipse 58% 52% at 58% 26%, #000 30%, transparent 100%);
+  }
 }
 
 /* The page-load "gavel strike": the name drops onto the block, the room jolts once,

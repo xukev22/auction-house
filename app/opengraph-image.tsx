@@ -20,11 +20,25 @@ export default async function OpengraphImage() {
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         padding: '64px 72px',
-        background: `radial-gradient(ellipse at 20% 0%, ${BRAND.claretLight}, ${BRAND.claret} 65%)`,
-        color: BRAND.bone,
+        // Violet stage wash from the top-left.
+        background: `radial-gradient(ellipse at 15% 0%, ${BRAND.violetGlow}, ${BRAND.night} 62%)`,
+        color: BRAND.cream,
         fontFamily: 'Hanken Grotesk',
       }}
     >
+      {/* A faint teal spotlight on the right, as its own layer behind the text. */}
+      <div
+        style={{
+          position: 'absolute',
+          top: -120,
+          right: -60,
+          width: 640,
+          height: 640,
+          borderRadius: 320,
+          background: `radial-gradient(circle, ${BRAND.teal}33, transparent 70%)`,
+        }}
+      />
+
       <div
         style={{
           alignSelf: 'flex-start',
