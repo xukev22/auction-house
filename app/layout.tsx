@@ -40,7 +40,18 @@ export const viewport: Viewport = { themeColor: '#160a22' };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={`${rozha.variable} ${hanken.variable} h-full antialiased`}>
+    // suppressHydrationWarning: the script below adds a class to <html> before React hydrates.
+    <html
+      lang="en"
+      className={`${rozha.variable} ${hanken.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Turns on the page-load fade (globals.css) only when JS runs, so nothing stays hidden without it. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready')" }}
+        />
+      </head>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );

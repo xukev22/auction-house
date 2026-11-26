@@ -1,7 +1,7 @@
 'use client';
 
 import Image, { type StaticImageData } from 'next/image';
-import { useEffect, useState } from 'react';
+import { type CSSProperties, useEffect, useState } from 'react';
 import sonu from '@/public/sonunigam.jpg';
 import threeIdiots from '@/public/3idiots.webp';
 import laalSinghChaddha from '@/public/LSC.avif';
@@ -49,20 +49,27 @@ export function Backdrop() {
         </filter>
       </svg>
 
-      {SLIDES.map((slide, i) => (
-        <Image
-          key={slide.src.src}
-          src={slide.src}
-          alt=""
-          fill
-          priority={i === 0}
-          sizes="(min-width: 1024px) 64vw, 100vw"
-          className={`object-cover transition-opacity duration-[1600ms] ease-in-out motion-reduce:transition-none ${
-            i === active ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ objectPosition: slide.position, filter: 'url(#stage-duotone)' }}
-        />
-      ))}
+      {/* Un-blurs in with the page (globals.css). On its own layer so it doesn't fight the
+          wrapper's opacity or the images' duotone filter. */}
+      <div
+        className="page-unblur absolute inset-0"
+        style={{ '--unblur-delay': '600ms' } as CSSProperties}
+      >
+        {SLIDES.map((slide, i) => (
+          <Image
+            key={slide.src.src}
+            src={slide.src}
+            alt=""
+            fill
+            priority={i === 0}
+            sizes="(min-width: 1024px) 64vw, 100vw"
+            className={`object-cover transition-opacity duration-[1600ms] ease-in-out motion-reduce:transition-none ${
+              i === active ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ objectPosition: slide.position, filter: 'url(#stage-duotone)' }}
+          />
+        ))}
+      </div>
     </div>
   );
 }
