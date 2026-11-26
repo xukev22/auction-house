@@ -18,7 +18,8 @@ const hanken = Hanken_Grotesk({
 // favicon from favicon.ico, both in this folder.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: SITE_NAME,
+  // Pages can set just their own name, e.g. "Catalog" -> "Catalog | Sonu Auction House".
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   openGraph: {
     title: SITE_NAME,

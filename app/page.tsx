@@ -40,7 +40,10 @@ export default async function Home() {
             The first lot goes under the hammer {AUCTION_WHEN}.
           </p>
           <p className="unblur-line text-cream/70" style={delay(900)}>
-            Date and time are tentative.
+            Date and time are tentative.{' '}
+            <Link href="/catalog" className="text-cream underline underline-offset-4">
+              Browse the catalog
+            </Link>
           </p>
         </div>
 

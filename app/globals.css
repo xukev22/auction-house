@@ -66,11 +66,37 @@ html.js-ready .page-unblur {
   }
 }
 
+/* Placeholder shimmer for things that aren't there yet (catalog lots): a slow violet
+   stage light sweeping across. */
+.skeleton {
+  background: linear-gradient(
+    100deg,
+    rgb(251 241 227 / 0.06) 30%,
+    rgb(157 78 221 / 0.2) 50%,
+    rgb(251 241 227 / 0.06) 70%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-sweep 2s ease-in-out infinite;
+}
+
+@keyframes skeleton-sweep {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.js-ready .unblur-line,
   html.js-ready .page-unblur {
     animation: none;
     opacity: 1;
     filter: none;
+  }
+
+  .skeleton {
+    animation: none;
   }
 }
