@@ -30,9 +30,9 @@ export function GoogleButton() {
       type="button"
       onClick={handleLogin}
       disabled={loading}
-      className="rounded-md border border-current px-4 py-2 disabled:opacity-50"
+      className="rounded-full bg-bone px-5 py-2.5 font-semibold text-claret hover:bg-white disabled:opacity-60"
     >
-      {loading ? 'Redirecting…' : 'Continue with Google'}
+      {loading ? 'Redirecting…' : 'Sign in with Google'}
     </button>
   );
 }
