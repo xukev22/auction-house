@@ -19,6 +19,8 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@fontsource/hanken-grotesk": "^5.3.0",
+    "@fontsource/rozha-one": "^5.3.0",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",

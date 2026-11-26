@@ -41,6 +41,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals and any path with a file extension (static assets).
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)'],
+  // Skip Next internals, the generated link-preview image (crawlers must reach it signed out),
+  // and any path with a file extension (static assets like favicon.ico).
+  matcher: ['/((?!_next/static|_next/image|opengraph-image|.*\\..*).*)'],
 };

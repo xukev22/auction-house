@@ -2,10 +2,8 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { signOut } from '@/utils/supabase/signout';
 import { GoogleButton } from '@/app/auth/login/GoogleButton';
+import { AUCTION_START, AUCTION_WHEN } from '@/lib/event';
 import { Countdown } from './Countdown';
-
-// Sunday, November 29, 2026 at 8:00 pm Eastern (EST, UTC-5). Tentative.
-const AUCTION_START = new Date('2026-11-29T20:00:00-05:00');
 
 export default async function Home() {
   const supabase = await createClient();
@@ -28,7 +26,7 @@ export default async function Home() {
       <div className="settle-in flex flex-col gap-10 lg:max-w-xl">
         <div className="flex max-w-xl flex-col gap-2">
           <p className="text-xl leading-snug md:text-2xl">
-            The first lot goes under the hammer Sunday, November&nbsp;29 at 8&nbsp;pm ET.
+            The first lot goes under the hammer {AUCTION_WHEN}.
           </p>
           <p className="text-bone/70">Date and time are tentative.</p>
         </div>
