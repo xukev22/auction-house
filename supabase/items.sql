@@ -1,10 +1,13 @@
 -- The catalog table: only what's for sale. Bids, winners and which lot is up live in their own tables.
--- Already run once (SQL Editor). The lots themselves are in lots.sql.
+-- Already run once (SQL Editor). The lots themselves are in lots.sql, which also adds any
+-- column created after that first run (like type).
 
 create table public.items (
   id bigint generated always as identity primary key,
   lot_number int not null unique,
   title text not null,
+  -- What kind of thing it is: 'Hat', 'T-shirt', 'Long sleeve', 'Hoodie', 'Jersey'.
+  type text,
   -- Optional free text, e.g. 'M', 'XL', 'One size', '10.5'.
   size text,
   description text,
