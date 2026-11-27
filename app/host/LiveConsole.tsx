@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { STAGE_HEADLINE } from '@/lib/auction';
 import { ActionButton } from './ActionButton';
 import { ActionForm } from './ActionForm';
 import {
@@ -31,12 +32,6 @@ const STAGES = [
   { stage: 'going twice', label: 'Going twice' },
   { stage: 'bidding', label: 'Back to bidding' },
 ] as const;
-
-const STAGE_HEADLINE = {
-  bidding: 'Bidding is open',
-  'going once': 'Going once',
-  'going twice': 'Going twice',
-};
 
 const timeOf = (iso: string) =>
   new Date(iso).toLocaleTimeString('en-US', {

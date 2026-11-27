@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
 
 function subscribe(onTick: () => void) {
   const id = setInterval(onTick, 1000);
@@ -14,13 +14,14 @@ const noTimeOnServer = () => null;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-export function Countdown({ target }: { target: Date }) {
+// `done` replaces the timer once it reaches zero.
+export function Countdown({ target, done }: { target: Date; done?: ReactNode }) {
   const now = useSyncExternalStore(subscribe, nowInSeconds, noTimeOnServer);
 
   const remaining = now === null ? null : Math.max(0, target.getTime() / 1000 - now);
 
   if (remaining === 0) {
-    return <p className="text-3xl font-light md:text-5xl">Bidding is open.</p>;
+    return done ?? <p className="text-3xl font-light md:text-5xl">Bidding is open.</p>;
   }
 
   const units: [string, number | null][] = [
