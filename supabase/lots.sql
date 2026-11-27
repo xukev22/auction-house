@@ -1,6 +1,7 @@
 -- Every lot in the catalog. Edit this file, then run it in the SQL Editor: it replaces all the lots.
 -- Lot numbers follow the order of the lines below. Copies of the same thing share a photo.
--- Safe to rerun until bidding starts (after that, bids point at these rows).
+-- Safe to rerun until a game uses these lots. After that the database refuses (bids and sales
+-- point at these rows), so delete any test games first (Table Editor -> games).
 --
 -- Order: hats and tops take turns, copies are spread across the night, and the
 -- hoodies and jersey are saved for the middle and the end.
