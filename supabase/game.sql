@@ -50,7 +50,8 @@ create table public.bids (
   item_id bigint not null references public.items (id),
   player_id uuid not null,
   amount int not null check (amount > 0),
-  created_at timestamptz not null default now(),
+  -- The moment the bid was accepted (now() would be when the request started).
+  created_at timestamptz not null default clock_timestamp(),
   -- Only people in the game can bid in it.
   foreign key (game_id, player_id) references public.game_players (game_id, player_id)
     on delete cascade
@@ -428,11 +429,12 @@ begin
     raise exception 'No lot is up.';
   end if;
 
+  -- Ids follow the order bids were accepted in, even when two land in the same instant.
   delete from public.bids
   where id = (
     select id from public.bids
     where game_id = v_game.id and item_id = v_game.current_item_id
-    order by created_at desc, id desc
+    order by id desc
     limit 1
   );
   if not found then
