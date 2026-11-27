@@ -61,7 +61,7 @@ export function Backdrop() {
             src={slide.src}
             alt=""
             fill
-            priority={i === 0}
+            preload={i === 0}
             sizes="(min-width: 1024px) 64vw, 100vw"
             className={`object-cover transition-opacity duration-[1600ms] ease-in-out motion-reduce:transition-none ${
               i === active ? 'opacity-100' : 'opacity-0'
