@@ -4,6 +4,9 @@ export const AUCTION_DAY = 'Sunday, November 29';
 export const AUCTION_TIME = '8 pm ET';
 export const AUCTION_WHEN = `${AUCTION_DAY} at ${AUCTION_TIME}`;
 
+// Checked on the server each time a page loads.
+export const auctionHasStarted = () => Date.now() >= AUCTION_START.getTime();
+
 export const SITE_NAME = 'Sonu Auction House';
 export const SITE_URL = 'https://sonunigam.vercel.app';
 export const SITE_DESCRIPTION = `The first lot goes under the hammer ${AUCTION_WHEN}.`;

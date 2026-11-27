@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import Image from 'next/image';
@@ -19,7 +18,7 @@ import {
   type Sale,
 } from '@/lib/auction';
 import { getBids, getGames, getLots, getRoster, getSales } from '@/lib/auction-queries';
-import { AUCTION_START, AUCTION_WHEN } from '@/lib/event';
+import { AUCTION_START, AUCTION_WHEN, auctionHasStarted } from '@/lib/event';
 import { createClient } from '@/utils/supabase/server';
 import { BidControls } from './BidControls';
 
@@ -49,17 +48,6 @@ export default async function LivePage() {
   );
 }
 
-function Header({ children }: { children?: ReactNode }) {
-  return (
-    <header className="flex items-center justify-between gap-4">
-      <Link href="/" className="font-display text-xl leading-none md:text-2xl">
-        Sonu Auction House
-      </Link>
-      {children}
-    </header>
-  );
-}
-
 async function LiveGame({ db, game, userId }: { db: SupabaseClient; game: Game; userId: string }) {
   const [players, lots, sales] = await Promise.all([
     getRoster(db, game.id),
@@ -81,16 +69,17 @@ async function LiveGame({ db, game, userId }: { db: SupabaseClient; game: Game; 
 
   return (
     <>
-      <Header>
+      <div className="flex items-center justify-between gap-4 text-sm">
+        <p className="text-teal">Live now</p>
         {me && (
-          <p className="flex items-center gap-2 text-sm text-cream/70">
+          <p className="flex items-center gap-2 text-cream/70">
             <Avatar url={me.avatar_url} name={me.name} size={28} />
             <span>
               <span className="text-cream tabular-nums">{me.money_left}</span> left
             </span>
           </p>
         )}
-      </Header>
+      </div>
 
       {!me && (
         <p className="text-cream/70">
@@ -316,50 +305,125 @@ async function NotLive({
   const budgetIn = new Map(
     (data ?? []).map((row) => [row.game_id as number, row.budget as number]),
   );
-  // Games come newest first, so the first one says whether the auction is over.
-  const over = games[0]?.ended_at ? games[0] : undefined;
+  // A game the host has set up with you in it, but not started.
   const upcoming = games.find((game) => !game.started_at && budgetIn.has(game.id));
-  const [lots, sales] =
-    over && budgetIn.has(over.id)
-      ? await Promise.all([getLots(db), getSales(db, over.id)])
-      : [[], []];
+  const lastEnded = games
+    .filter((game) => game.ended_at)
+    .sort((a, b) => b.ended_at!.localeCompare(a.ended_at!))[0];
+  const startsAt = (
+    <Countdown
+      target={AUCTION_START}
+      done={
+        <p className="text-cream/70">
+          The host will start any minute. This page updates on its own.
+        </p>
+      }
+    />
+  );
 
   return (
     <>
-      <Header />
       <section aria-labelledby="status-heading" className="flex flex-col items-start gap-8">
         <h1 id="status-heading" className="font-display text-6xl leading-none md:text-8xl">
-          {over ? 'That’s a wrap' : 'Not live yet'}
+          No auction in progress
         </h1>
-        {over ? (
-          <p className="text-xl">The auction is over. Thanks for playing.</p>
-        ) : (
+        {upcoming ? (
           <>
             <p className="max-w-xl text-xl">
-              {upcoming
-                ? `You’re in. You’ll start with ${budgetIn.get(upcoming.id)} to spend.`
-                : `Bidding opens ${AUCTION_WHEN}.`}
+              You&rsquo;re in the next one. You&rsquo;ll start with {budgetIn.get(upcoming.id)} to
+              spend.
             </p>
-            <Countdown
-              target={AUCTION_START}
-              done={
-                <p className="text-cream/70">
-                  The host will start any minute. This page updates on its own.
-                </p>
-              }
-            />
+            {startsAt}
           </>
+        ) : (
+          !auctionHasStarted() && (
+            <>
+              <p className="max-w-xl text-xl">Bidding opens {AUCTION_WHEN}.</p>
+              {startsAt}
+            </>
+          )
         )}
         <Link href="/catalog" className="underline underline-offset-4">
           Browse the catalog
         </Link>
       </section>
-      {over && budgetIn.has(over.id) && (
-        <YourLots
-          sales={sales.filter((sale) => sale.player_id === userId)}
-          lotOf={new Map(lots.map((lot) => [lot.id, lot]))}
-        />
-      )}
+      {lastEnded && <LastAuction db={db} game={lastEnded} userId={userId} />}
     </>
+  );
+}
+
+const endedOn = (iso: string) => {
+  const date = new Date(iso);
+  const day = date.toLocaleDateString('en-US', {
+    timeZone: 'America/New_York',
+    month: 'long',
+    day: 'numeric',
+  });
+  const time = date
+    .toLocaleTimeString('en-US', {
+      timeZone: 'America/New_York',
+      hour: 'numeric',
+      minute: '2-digit',
+    })
+    .replace(' AM', ' am')
+    .replace(' PM', ' pm');
+  return `${day} at ${time}`;
+};
+
+// How the most recent auction went: every lot that went home with someone, in lot order.
+async function LastAuction({
+  db,
+  game,
+  userId,
+}: {
+  db: SupabaseClient;
+  game: Game;
+  userId: string;
+}) {
+  const [lots, sales, players] = await Promise.all([
+    getLots(db),
+    getSales(db, game.id),
+    getRoster(db, game.id),
+  ]);
+  const lotOf = new Map(lots.map((lot) => [lot.id, lot]));
+  const nameOf = new Map(players.map((player) => [player.player_id, player.name]));
+  const results = sales
+    .filter((sale) => sale.player_id && lotOf.has(sale.item_id))
+    .sort((a, b) => lotOf.get(a.item_id)!.lot_number - lotOf.get(b.item_id)!.lot_number);
+
+  return (
+    <section aria-labelledby="last-heading" className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <h2 id="last-heading" className="font-display text-3xl leading-none">
+          Most recent auction
+        </h2>
+        <p className="text-cream/70">
+          {game.name}, ended {endedOn(game.ended_at!)}.{' '}
+          {results.length === 1 ? '1 lot' : `${results.length} lots`} went home with someone.
+        </p>
+      </div>
+      {results.length > 0 && (
+        <ol className="flex flex-col divide-y divide-cream/10 border-y border-cream/10">
+          {results.map((sale) => {
+            const lot = lotOf.get(sale.item_id)!;
+            const yours = sale.player_id === userId;
+            const name = yours ? 'You' : (nameOf.get(sale.player_id!) ?? 'Someone');
+            return (
+              <li
+                key={sale.item_id}
+                className={`flex items-baseline gap-3 py-2.5 ${yours ? 'font-semibold' : ''}`}
+              >
+                <span className="min-w-0 flex-1 truncate">
+                  Lot {lot.lot_number}: {lot.title}
+                </span>
+                <span className="shrink-0 text-sm font-normal text-cream/70">
+                  {sale.amount > 0 ? `${name} for ${sale.amount}` : `${name}, free`}
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </section>
   );
 }

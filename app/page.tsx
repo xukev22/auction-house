@@ -18,7 +18,7 @@ export default async function Home() {
   const firstName = (user?.user_metadata.full_name as string | undefined)?.split(' ')[0];
 
   return (
-    <main className="relative isolate flex flex-1 flex-col justify-between gap-16 overflow-hidden bg-[radial-gradient(ellipse_at_15%_0%,#2f1150_0%,transparent_55%)] px-4 py-10 sm:px-8 md:px-14 md:py-14 lg:flex-row lg:items-end">
+    <main className="relative isolate flex flex-1 flex-col justify-between gap-16 overflow-hidden bg-[radial-gradient(ellipse_at_15%_0%,#2f1150_0%,transparent_55%)] px-4 pt-18 pb-10 sm:px-8 md:px-14 md:py-14 lg:flex-row lg:items-end">
       <Backdrop />
 
       {/* Phones/tablets: the name fills the width. Wide screens: name top-left, details bottom-right. */}

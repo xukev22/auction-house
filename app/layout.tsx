@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Hanken_Grotesk, Rozha_One } from 'next/font/google';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/event';
+import { SiteNav } from './SiteNav';
 import './globals.css';
 
 const rozha = Rozha_One({
@@ -53,7 +54,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready')" }}
         />
       </head>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <SiteNav />
+        {children}
+      </body>
     </html>
   );
 }

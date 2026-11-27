@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { AUCTION_WHEN } from '@/lib/event';
 import { LotGrid, type CatalogLot } from './LotGrid';
@@ -42,13 +41,6 @@ export default async function CatalogPage() {
 
   return (
     <main className="flex flex-1 flex-col gap-14 px-4 py-8 sm:px-8 md:gap-20 md:px-14 md:py-12">
-      <header className="unblur-line flex items-baseline justify-between gap-4" style={delay(0)}>
-        <Link href="/" className="font-display text-xl leading-none md:text-2xl">
-          Sonu Auction House
-        </Link>
-        <p className="hidden text-sm text-cream/70 sm:block">{AUCTION_WHEN}</p>
-      </header>
-
       <div className="flex flex-col gap-5">
         {/* "EVERYTHING" fills the width without overflowing: ~5.6em wide in Rozha One caps. */}
         <h1 className="font-display text-[min(15.5vw,14rem)] leading-[0.86] tracking-[-0.01em]">

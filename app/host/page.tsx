@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { LiveRefresh } from '@/app/LiveRefresh';
 import { getHost } from '@/utils/host';
@@ -20,13 +19,6 @@ export default async function HostPage({ searchParams }: PageProps<'/host'>) {
   return (
     <main className="flex flex-1 flex-col gap-12 px-4 py-8 sm:px-8 md:gap-16 md:px-14 md:py-12">
       <LiveRefresh />
-      <header className="flex items-baseline justify-between gap-4">
-        <Link href="/" className="font-display text-xl leading-none md:text-2xl">
-          Sonu Auction House
-        </Link>
-        <p className="text-sm text-cream/70">Host controls</p>
-      </header>
-
       {live ? (
         <LiveConsole game={live} />
       ) : (
